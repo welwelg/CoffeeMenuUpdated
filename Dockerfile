@@ -43,25 +43,26 @@ WORKDIR /var/www/html
 # 6. Install Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
-# 7. Copy backend source code
+# 7. Explicitly copy and prepare the entrypoint script (FIXED: Moved up here for assurance)
+# I-copy muna ang script bago ang 'COPY . .' para hindi ma-exclude
+COPY docker-entrypoint.sh /usr/local/bin/
+RUN chmod +x /usr/local/bin/docker-entrypoint.sh
+
+# 8. Copy backend source code (Ang linyang ito ay HULI na dapat)
 COPY . .
 
-# 8. Copy the BUILT frontend assets from Stage 1 (The Magic Step)
+# 9. Copy the BUILT frontend assets from Stage 1 (The Magic Step)
 # This takes the compiled JS/CSS from the Node layer and puts it in the PHP layer
 COPY --from=frontend /app/public/build public/build
 #COPY --from=frontend /app/public/manifest.json public/manifest.json
 
-# 9. Install PHP Dependencies
+# 10. Install PHP Dependencies
 RUN composer install --no-dev --optimize-autoloader
 
-# 10. Fix file permissions so Laravel can write logs
+# 11. Fix file permissions so Laravel can write logs
 RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache
-
-# Copy the entrypoint script
-COPY docker-entrypoint.sh /usr/local/bin/
-RUN chmod +x /usr/local/bin/docker-entrypoint.sh
 
 EXPOSE 80
 
-# <--- ETO YUNG BINAGO NATIN (FULL PATH PARA SIGURADO) --->
+# 12. Use the absolute path for the entrypoint (FIXED: Para ma-address ang "not found" error)
 ENTRYPOINT ["/usr/local/bin/docker-entrypoint.sh"]
