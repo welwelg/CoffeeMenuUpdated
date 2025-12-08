@@ -37,26 +37,21 @@ RUN sed -ri -e 's!/var/www/!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/apache2.conf
 # 4. Enable Apache mod_rewrite (Essential for Laravel routing)
 RUN a2enmod rewrite
 
-# 5. Set working directory
+# 5. Create startup script inline
+RUN echo '#!/bin/bash\nset -e\necho "📂 Running migrations..."\nphp artisan migrate --force\necho "🔥 Clearing caches..."\nphp artisan config:clear\nphp artisan route:clear\nphp artisan view:clear\necho "🚀 Starting Apache..."\nexec apache2-foreground' > /startup.sh && chmod +x /startup.sh
+
+# 6. Set working directory
 WORKDIR /var/www/html
 
-# 6. Install Composer
+# 7. Install Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
-# ADD THIS LINE TO BUST THE CACHE AND FORCE RE-COPY
-RUN echo "Forcing cache invalidation"
-
-# 7. Explicitly copy and prepare the entrypoint script
-COPY docker-entrypoint.sh /usr/local/bin/
-RUN chmod +x /usr/local/bin/docker-entrypoint.sh
-
-# 8. Copy backend source code (Ang linyang ito ay HULI na dapat)
+# 8. Copy backend source code
 COPY . .
 
 # 9. Copy the BUILT frontend assets from Stage 1 (The Magic Step)
 # This takes the compiled JS/CSS from the Node layer and puts it in the PHP layer
 COPY --from=frontend /app/public/build public/build
-#COPY --from=frontend /app/public/manifest.json public/manifest.json
 
 # 10. Install PHP Dependencies
 RUN composer install --no-dev --optimize-autoloader
@@ -66,6 +61,5 @@ RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cac
 
 EXPOSE 80
 
-# 12. Set entrypoint and default command
-ENTRYPOINT ["/usr/local/bin/docker-entrypoint.sh"]
-CMD []
+# 12. Use startup script as entrypoint
+CMD ["/startup.sh"]
