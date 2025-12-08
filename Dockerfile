@@ -43,8 +43,10 @@ WORKDIR /var/www/html
 # 6. Install Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
-# 7. Explicitly copy and prepare the entrypoint script (FIXED: Moved up here for assurance)
-# I-copy muna ang script bago ang 'COPY . .' para hindi ma-exclude
+# ADD THIS LINE TO BUST THE CACHE AND FORCE RE-COPY
+RUN echo "Forcing cache invalidation"
+
+# 7. Explicitly copy and prepare the entrypoint script
 COPY docker-entrypoint.sh /usr/local/bin/
 RUN chmod +x /usr/local/bin/docker-entrypoint.sh
 
