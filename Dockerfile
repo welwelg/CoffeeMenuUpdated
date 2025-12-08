@@ -66,4 +66,4 @@ EXPOSE 80
 # 12. Use the self-created startup script as the entrypoint
 # We use CMD here, which will execute the script since ENTRYPOINT is absent (and we rely on the shell path)
 # *UPDATE*: Using ENTRYPOINT is safer for explicit pathing.
-ENTRYPOINT ["/usr/local/bin/startup.sh"]
+CMD php artisan config:clear && php artisan migrate --force && apache2-foreground
