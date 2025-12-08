@@ -9,5 +9,5 @@ php artisan config:clear
 php artisan route:clear
 php artisan view:clear
 
-echo "🚀 Starting Apache..."
-exec apache2-foreground
+echo "🚀 Handing off to Apache..."
+exec "$@"

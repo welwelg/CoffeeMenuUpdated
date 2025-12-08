@@ -37,8 +37,10 @@ RUN sed -ri -e 's!/var/www/!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/apache2.conf
 # 4. Enable Apache mod_rewrite (Essential for Laravel routing)
 RUN a2enmod rewrite
 
-# 5. Create startup script with proper newlines
-RUN printf '#!/bin/bash\nset -e\necho "📂 Running migrations..."\nphp artisan migrate --force\necho "🔥 Clearing caches..."\nphp artisan config:clear\nphp artisan route:clear\nphp artisan view:clear\necho "🚀 Starting Apache..."\nexec apache2-foreground\n' > /startup.sh && chmod +x /startup.sh
+# 5. Create and prepare the startup script *directly inside the container*
+# This bypasses the CRLF/COPY/PATH issues completely.
+RUN printf '#!/bin/bash\nset -e\necho "📂 Running migrations..."\nphp artisan migrate --force\necho "🔥 Clearing caches..."\nphp artisan config:clear\nphp artisan route:clear\nphp artisan view:clear\nexec apache2-foreground\n' > /usr/local/bin/startup.sh \
+    && chmod +x /usr/local/bin/startup.sh
 
 # 6. Set working directory
 WORKDIR /var/www/html
@@ -61,5 +63,7 @@ RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cac
 
 EXPOSE 80
 
-# 12. Use startup script as entrypoint
-CMD ["/startup.sh"]
+# 12. Use the self-created startup script as the entrypoint
+# We use CMD here, which will execute the script since ENTRYPOINT is absent (and we rely on the shell path)
+# *UPDATE*: Using ENTRYPOINT is safer for explicit pathing.
+ENTRYPOINT ["/usr/local/bin/startup.sh"]
