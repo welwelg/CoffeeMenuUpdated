@@ -37,8 +37,8 @@ RUN sed -ri -e 's!/var/www/!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/apache2.conf
 # 4. Enable Apache mod_rewrite (Essential for Laravel routing)
 RUN a2enmod rewrite
 
-# 5. Create startup script inline
-RUN echo '#!/bin/bash\nset -e\necho "📂 Running migrations..."\nphp artisan migrate --force\necho "🔥 Clearing caches..."\nphp artisan config:clear\nphp artisan route:clear\nphp artisan view:clear\necho "🚀 Starting Apache..."\nexec apache2-foreground' > /startup.sh && chmod +x /startup.sh
+# 5. Create startup script with proper newlines
+RUN printf '#!/bin/bash\nset -e\necho "📂 Running migrations..."\nphp artisan migrate --force\necho "🔥 Clearing caches..."\nphp artisan config:clear\nphp artisan route:clear\nphp artisan view:clear\necho "🚀 Starting Apache..."\nexec apache2-foreground\n' > /startup.sh && chmod +x /startup.sh
 
 # 6. Set working directory
 WORKDIR /var/www/html
