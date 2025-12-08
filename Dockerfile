@@ -57,9 +57,11 @@ RUN composer install --no-dev --optimize-autoloader
 # 10. Fix file permissions so Laravel can write logs
 RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache
 
+# Copy the entrypoint script
 COPY docker-entrypoint.sh /usr/local/bin/
 RUN chmod +x /usr/local/bin/docker-entrypoint.sh
 
 EXPOSE 80
 
-ENTRYPOINT ["docker-entrypoint.sh"]
+# <--- ETO YUNG BINAGO NATIN (FULL PATH PARA SIGURADO) --->
+ENTRYPOINT ["/usr/local/bin/docker-entrypoint.sh"]
