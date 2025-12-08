@@ -49,7 +49,7 @@ COPY . .
 # 8. Copy the BUILT frontend assets from Stage 1 (The Magic Step)
 # This takes the compiled JS/CSS from the Node layer and puts it in the PHP layer
 COPY --from=frontend /app/public/build public/build
-COPY --from=frontend /app/public/manifest.json public/manifest.json
+#COPY --from=frontend /app/public/manifest.json public/manifest.json
 
 # 9. Install PHP Dependencies
 RUN composer install --no-dev --optimize-autoloader
