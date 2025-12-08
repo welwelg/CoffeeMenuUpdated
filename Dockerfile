@@ -66,5 +66,6 @@ RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cac
 
 EXPOSE 80
 
-# 12. Use the absolute path for the entrypoint (FIXED: Para ma-address ang "not found" error)
+# 12. Set entrypoint and default command
 ENTRYPOINT ["/usr/local/bin/docker-entrypoint.sh"]
+CMD []
