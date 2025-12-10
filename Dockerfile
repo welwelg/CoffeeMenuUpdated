@@ -28,10 +28,11 @@ RUN composer install --no-dev --optimize-autoloader
 # Copy frontend build
 COPY --from=frontend /app/public/build ./public/build
 
-# Copy environment file
-RUN cp .env.example .env
+# REMOVE THESE LINES - Don't copy .env.example or generate key in Dockerfile
+# RUN cp .env.example .env
+# RUN php artisan key:generate
 
-# Generate app key
-RUN php artisan key:generate
+# Clear config cache to use environment variables from Render
+RUN php artisan config:clear && php artisan cache:clear
 
 CMD php artisan serve --host=0.0.0.0 --port=$PORT
