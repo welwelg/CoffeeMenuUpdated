@@ -55,4 +55,4 @@ EXPOSE 80
 # Render native Docker services usually detect the exposed port or we define it.
 # Let's add a script to update the apache port on startup just in case.
 
-CMD sed -i "s/80/$PORT/g" /etc/apache2/sites-enabled/000-default.conf /etc/apache2/ports.conf && docker-php-entrypoint apache2-foreground
+CMD sed -i "s/80/$PORT/g" /etc/apache2/sites-enabled/000-default.conf /etc/apache2/ports.conf && php artisan migrate --force && docker-php-entrypoint apache2-foreground
