@@ -9,9 +9,7 @@ import { Head, Link, router, usePage } from '@inertiajs/react';
 import { Edit, Plus, SquareCheckBig, Trash2 } from 'lucide-react';
 import { useState } from 'react';
 
-const breadcrumbs: BreadcrumbItem[] = [
-    { title: 'Coffee Menu', href: '/coffee-menu' },
-];
+const breadcrumbs: BreadcrumbItem[] = [{ title: 'Coffee Menu', href: '/coffee-menu' }];
 
 interface CoffeeMenu {
     id: number;
@@ -48,7 +46,6 @@ export default function Index() {
             <Head title="Coffee Menu" />
 
             <div className="flex h-full flex-1 flex-col gap-8 p-6 md:p-8">
-
                 {/* 1. HEADER SECTION with Action Button */}
                 <div className="flex items-center justify-between">
                     <div>
@@ -65,7 +62,10 @@ export default function Index() {
 
                 {/* 2. FLASH MESSAGE */}
                 {flash.message && (
-                    <Alert variant="default" className="border-green-200 bg-green-50 text-green-800 dark:border-green-900/50 dark:bg-green-900/20 dark:text-green-300">
+                    <Alert
+                        variant="default"
+                        className="border-green-200 bg-green-50 text-green-800 dark:border-green-900/50 dark:bg-green-900/20 dark:text-green-300"
+                    >
                         <SquareCheckBig className="h-4 w-4 text-green-600 dark:text-green-400" />
                         <AlertTitle>Success</AlertTitle>
                         <AlertDescription>{flash.message}</AlertDescription>
@@ -76,9 +76,7 @@ export default function Index() {
                 <Card className="border-border/60 shadow-sm">
                     <CardHeader>
                         <CardTitle>Current Inventory</CardTitle>
-                        <CardDescription>
-                            A list of all coffee items currently available on the menu.
-                        </CardDescription>
+                        <CardDescription>A list of all coffee items currently available on the menu.</CardDescription>
                     </CardHeader>
                     <CardContent>
                         {coffeemenu.length === 0 ? (
@@ -90,7 +88,10 @@ export default function Index() {
                                 <h3 className="text-lg font-semibold text-foreground">No coffees added yet</h3>
                                 <p className="mb-4 text-sm">Get started by creating your first coffee menu item.</p>
                                 <Link href={route('coffee-menu.create')}>
-                                    <Button variant="outline">Create Item</Button>
+                                    <Button className="gap-2">
+                                        <Plus className="h-4 w-4" />
+                                        Add Coffee
+                                    </Button>
                                 </Link>
                             </div>
                         ) : (
@@ -115,8 +116,10 @@ export default function Index() {
                                                         <img
                                                             src={
                                                                 coffee.img
-                                                                    ? (coffee.img.startsWith('http') ? coffee.img : `/storage/${coffee.img}`)
-                                                                    : (coffee.image_url || PLACEHOLDER_IMG)
+                                                                    ? coffee.img.startsWith('http')
+                                                                        ? coffee.img
+                                                                        : `/storage/${coffee.img}`
+                                                                    : coffee.image_url || PLACEHOLDER_IMG
                                                             }
                                                             alt={coffee.name}
                                                             className="h-full w-full object-cover"
@@ -131,9 +134,7 @@ export default function Index() {
                                                 </TableCell>
 
                                                 {/* Name Cell */}
-                                                <TableCell className="font-medium">
-                                                    {coffee.name}
-                                                </TableCell>
+                                                <TableCell className="font-medium">{coffee.name}</TableCell>
 
                                                 {/* Price Cell */}
                                                 <TableCell>
@@ -151,7 +152,11 @@ export default function Index() {
                                                 <TableCell className="text-right">
                                                     <div className="flex justify-end gap-2">
                                                         <Link href={route('coffee-menu.edit', coffee.id)}>
-                                                            <Button variant="ghost" size="icon" className="h-8 w-8 hover:bg-blue-50 hover:text-blue-600 dark:hover:bg-blue-900/20">
+                                                            <Button
+                                                                variant="ghost"
+                                                                size="icon"
+                                                                className="h-8 w-8 hover:bg-blue-50 hover:text-blue-600 dark:hover:bg-blue-900/20"
+                                                            >
                                                                 <Edit className="h-4 w-4" />
                                                                 <span className="sr-only">Edit</span>
                                                             </Button>
