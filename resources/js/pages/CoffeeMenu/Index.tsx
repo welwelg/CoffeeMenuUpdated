@@ -52,12 +52,14 @@ export default function Index() {
                         <h1 className="text-2xl font-bold tracking-tight text-foreground">Coffee Menu</h1>
                         <p className="text-sm text-muted-foreground">Manage your coffee items, prices, and images.</p>
                     </div>
-                    <Link href={route('coffee-menu.create')}>
-                        <Button className="gap-2">
-                            <Plus className="h-4 w-4" />
-                            Add Coffee
-                        </Button>
-                    </Link>
+                    {coffeemenu.length > 0 && (
+                        <Link href={route('coffee-menu.create')}>
+                            <Button className="gap-2">
+                                <Plus className="h-4 w-4" />
+                                Add Coffee
+                            </Button>
+                        </Link>
+                    )}
                 </div>
 
                 {/* 2. FLASH MESSAGE */}
