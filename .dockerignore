@@ -1,0 +1,10 @@
+/vendor
+/node_modules
+/public/build
+/storage/*.key
+.env
+.git
+.idea
+.vscode
+render.yaml
+Dockerfile

@@ -1,0 +1,17 @@
+services:
+    - type: web
+      name: coffee-menu-app
+      env: docker
+      dockerContext: .
+      dockerfilePath: Dockerfile
+      envVars:
+          - key: APP_ENV
+            value: production
+          - key: APP_DEBUG
+            value: false
+          - key: LOG_CHANNEL
+            value: stderr
+          - key: WEB_DOCUMENT_ROOT
+            value: public
+          - key: PHP_INI_SCAN_DIR
+            value: .
